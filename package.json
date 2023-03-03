@@ -9,6 +9,7 @@
     "babel": "babel src --out-dir lib --copy-files --extensions '.ts'",
     "build": "npm run babel",
     "start": "npm run babel && node -r dotenv/config lib/start.js",
+    "test": "npm run babel && node -r dotenv/config lib/test/i18n.js",
     "upload_server": "http-server ./upload",
     "pm2_start": "pm2 start --name meeton_service npm -- run start"
   },
@@ -17,13 +18,21 @@
     "decimal.js": "^10.3.1",
     "dotenv": "^10.0.0",
     "https-proxy-agent": "^5.0.0",
+    "i18next": "^22.4.10",
     "js-yaml": "^4.1.0",
+    "mariadb": "^2.5.5",
     "markdown-escape": "^1.1.0",
     "mkdirp": "^1.0.4",
     "moment": "^2.29.1",
     "node-global-proxy": "^1.0.1",
     "node-telegram-bot-api": "0.57.0",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^6.9.0",
+    "sequelize-typescript": "^2.1.1",
     "telegraf": "^4.11.2",
+    "ton": "^13.4.1",
+    "ton-core": "^0.48.0",
+    "ton-crypto": "^3.2.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -45,7 +54,8 @@
     "@types/uuid": "^8.3.1",
     "@types/validator": "^13.6.6",
     "@types/web3-provider-engine": "^14.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.20.0",
+    "@typescript-eslint/eslint-plugin": "^5.20.0",
+    "@typescript-eslint/parser": "^5.54.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "eslint": "7",
     "eslint-config-standard-with-typescript": "^20.0.0",
@@ -54,6 +64,7 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-promise": "4",
     "prettier": "^2.2.1",
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "typescript-eslint": "^0.0.1-alpha.0"
   }
 }

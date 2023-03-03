@@ -1,0 +1,13 @@
+{
+  "translation": {
+    "setLanguage": {
+      "question": "Please set your favorite language",
+      "options": {
+        "1": {
+          "label": "English",
+          "value": "en"
+        }
+      }
+    }
+  }
+}
