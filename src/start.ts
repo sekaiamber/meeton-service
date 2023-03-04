@@ -12,9 +12,6 @@ app
     console.log('bot inited')
   })
   .then(async () => await app.start())
-  .then(() => {
-    console.log('bot started')
-  })
   .catch((e) => {
     console.log(e)
   })
