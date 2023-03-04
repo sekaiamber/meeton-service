@@ -1,14 +1,16 @@
 import { Context, Telegraf } from 'telegraf'
-import { UserLanguage } from '../../db/models/user'
+import { UserLanguage } from '../../db/models/User'
 import { MeetonContext } from '../types'
 import replyOptionQuestion from '../utils/replyOptionQuestions'
 import Reply from './base'
+import initFavorabilityTestReply from './InitFavorabilityTest'
 
 interface CallbackData {
   userId: number
   language: UserLanguage
 }
 
+// SetLanguage::00000,en
 const actionReg = /SetLanguage::[0-9]+,(en|zh-cn)/
 
 export class SetLanguageReply extends Reply {
@@ -38,7 +40,8 @@ export class SetLanguageReply extends Reply {
           '\n'
         )
       )
-      console.log(ctx.update)
+      await initFavorabilityTestReply.reply(ctx as unknown as MeetonContext)
+      // console.log(ctx.update)
       // const update1 = JSON.stringify(ctx.update)
       // console.log(update1)
       // const ctx2 = new Context(
@@ -52,22 +55,24 @@ export class SetLanguageReply extends Reply {
   }
 
   async reply(ctx: MeetonContext): Promise<void> {
-    const { i18n } = ctx.userModel
+    const { i18n, languageInited } = ctx.userModel
+    // TODO: reply menu
+    if (languageInited) return
     await replyOptionQuestion(ctx, {
       question: i18n.t('setLanguage.question'),
       options: [
+        {
+          label: i18n.t('setLanguage.options.0.label'),
+          value: this.makeOptionValue(
+            ctx,
+            i18n.t('setLanguage.options.0.value')
+          ),
+        },
         {
           label: i18n.t('setLanguage.options.1.label'),
           value: this.makeOptionValue(
             ctx,
             i18n.t('setLanguage.options.1.value')
-          ),
-        },
-        {
-          label: i18n.t('setLanguage.options.2.label'),
-          value: this.makeOptionValue(
-            ctx,
-            i18n.t('setLanguage.options.2.value')
           ),
         },
       ],

@@ -15,7 +15,7 @@ import {
 } from 'sequelize-typescript'
 import { KeyPair, mnemonicNew, mnemonicToWalletKey } from 'ton-crypto'
 import { WalletContractV4 } from 'ton'
-import User from './user'
+import User from './User'
 
 // EQCjrNjgzRowoSpiQO7b7qzVK9PIXNGDep6Z6ALo5mMF1ibf
 

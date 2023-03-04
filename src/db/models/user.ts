@@ -15,7 +15,8 @@ import {
 } from 'sequelize-typescript'
 import { i18n as i18nInterface } from 'i18next'
 import i18n from '../../i18n'
-import Wallet from './wallet'
+import Wallet from './Wallet'
+import InitFavorabilityTest from './InitFavorabilityTest'
 
 // EQCjrNjgzRowoSpiQO7b7qzVK9PIXNGDep6Z6ALo5mMF1ibf
 
@@ -61,6 +62,15 @@ export default class User extends Model {
     //
   }
 
+  @HasOne(() => InitFavorabilityTest)
+  get initFavorabilityTest(): InitFavorabilityTest {
+    return this.getDataValue('initFavorabilityTest')
+  }
+
+  set initFavorabilityTest(w: InitFavorabilityTest) {
+    //
+  }
+
   @BeforeUpdate
   @BeforeCreate
   static makeLowerCase(instance: User): void {
@@ -69,15 +79,22 @@ export default class User extends Model {
   }
 
   static async findOrCreateUser(id: number): Promise<User> {
-    let user = await User.findByPk(id, { include: [Wallet] })
+    let user = await User.findByPk(id, {
+      include: [Wallet, InitFavorabilityTest],
+    })
     if (!user) {
       user = await User.create({ id })
     }
     if (!user.wallet) {
       await Wallet.getUnusedWallet(id)
     }
+    if (!user.initFavorabilityTest) {
+      await InitFavorabilityTest.create({
+        userId: user.id,
+      })
+    }
     await user.reload({
-      include: [Wallet],
+      include: [Wallet, InitFavorabilityTest],
     })
     return user
   }
@@ -88,7 +105,7 @@ export default class User extends Model {
 
   async setLanguage(language: UserLanguage): Promise<void> {
     this.setDataValue('language', language)
-    // this.setDataValue('languageInited', true)
+    this.setDataValue('languageInited', true)
     await this.save()
   }
 

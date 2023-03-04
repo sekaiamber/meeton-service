@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import i18next from 'i18next'
-import en from './resources/en.json'
+import en from './resources/en'
 import zhCn from './resources/zh-cn.json'
 
 i18next.init({

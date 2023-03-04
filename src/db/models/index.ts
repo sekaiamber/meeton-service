@@ -1,5 +1,6 @@
-import Constant from './constant'
-import User from './user'
-import Wallet from './wallet'
+import Constant from './Constant'
+import User from './User'
+import Wallet from './Wallet'
+import InitFavorabilityTest from './InitFavorabilityTest'
 
-export { Constant, User, Wallet }
+export { Constant, User, Wallet, InitFavorabilityTest }

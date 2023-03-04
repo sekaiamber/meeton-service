@@ -3,7 +3,6 @@ import isURL from 'validator/lib/isURL'
 import isPort from 'validator/lib/isPort'
 import isIP from 'validator/lib/isIP'
 import { isEthAddress } from '../utils'
-import SandbagsVersion from '@sandbags-protocol/sandbags-utils/lib/version'
 
 export interface DbRowDataDiff<T> {
   prevValue: T | null
@@ -96,12 +95,6 @@ export const ColumnValidators = {
   isIP(value: string) {
     if (!isIP(value, 4)) {
       throw new Error(`${value} is not a ip v4 string`)
-    }
-  },
-  isVersion(value: string) {
-    const v = new SandbagsVersion(value)
-    if (!v.isValid) {
-      throw new Error(`${value} should be x.y.z version format`)
     }
   },
 }

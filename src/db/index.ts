@@ -3,7 +3,7 @@ import * as Models from './models'
 // import { promisify } from 'util'
 
 const { DB_HOST, DB_NAME, DB_USER, DB_PASS } = process.env
-const { Constant, User, Wallet } = Models
+const { Constant, User, Wallet, InitFavorabilityTest } = Models
 
 const sequelize = new Sequelize({
   host: DB_HOST,
@@ -18,7 +18,7 @@ const sequelize = new Sequelize({
   pool: {
     max: 25,
   },
-  models: [Constant, User, Wallet],
+  models: [Constant, User, Wallet, InitFavorabilityTest],
 })
 
 export default sequelize
