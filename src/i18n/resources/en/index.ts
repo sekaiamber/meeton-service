@@ -1,6 +1,21 @@
 import { arr2obj, getI18nOptionQuestionData } from '../../utils'
 import favorabilityQuestions from './favorabilityQuestions'
 
+const tokenTemplate = `<b>Your TON address is:</b>
+
+<code>{{address}}</code>
+
+`
+
+const statusTemplate = `<b>💓 Favorability: {{favorability}}(lv.{{lv}})</b>
+<code>[{{favorabilityProcess}}]</code>
+Next Level: {{favorabilityNext}}
+
+<b>♨️ Movement: {{movement}}/{{movementMax}}</b>
+<code>[{{movementProcess}}]</code>
+
+`
+
 const ret = {
   translation: {
     setLanguage: {
@@ -42,11 +57,10 @@ const ret = {
       template: '<b>🚧 Coming Soon 🚧</b>',
     },
     token: {
-      template: `<b>Your TON address is:</b>
-
-<code>{{address}}</code>
-
-`,
+      template: tokenTemplate,
+    },
+    status: {
+      template: statusTemplate,
     },
   },
 }

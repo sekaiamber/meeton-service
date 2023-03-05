@@ -4,6 +4,7 @@ import replyMenu from '../utils/replyMenu'
 import Reply from './base'
 import comingReply from './Coming'
 import tokenReply from './Token'
+import statusReply from './Status'
 
 interface ShowMenuCallbackData {
   userId: number
@@ -68,7 +69,7 @@ export class ShowMenuReply extends Reply {
         case 'status': {
           // TODO:
           await ctx.deleteMessage()
-          await comingReply.reply(mctx)
+          await statusReply.reply(mctx)
           break
         }
         case 'atlas': {

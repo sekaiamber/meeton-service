@@ -9,10 +9,12 @@
     "babel": "babel src --out-dir lib --copy-files --extensions '.ts'",
     "build": "npm run babel",
     "start": "npm run babel && node -r dotenv/config lib/start.js",
+    "start_task": "npm run babel && node -r dotenv/config lib/startTaskRunner.js",
     "test": "npm run babel && node -r dotenv/config lib/test/tonCase.js",
     "upload_server": "http-server ./upload",
     "script": "npm run babel && node -r dotenv/config ",
-    "pm2_start": "pm2 start --name meeton_service npm -- run start"
+    "pm2_start": "pm2 start --name meeton_service npm -- run start",
+    "pm2_start_task": "pm2 start --name meeton_service_task npm -- run start_task"
   },
   "dependencies": {
     "axios": "^0.24.0",
@@ -32,6 +34,7 @@
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.9.0",
     "sequelize-typescript": "^2.1.1",
+    "string-progressbar": "^1.0.4",
     "telegraf": "^4.11.2",
     "ton": "^13.4.1",
     "ton-core": "^0.48.0",

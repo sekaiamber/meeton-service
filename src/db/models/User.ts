@@ -17,6 +17,8 @@ import { i18n as i18nInterface } from 'i18next'
 import i18n from '../../i18n'
 import Wallet from './Wallet'
 import InitFavorabilityTest from './InitFavorabilityTest'
+import Status from './Status'
+import UserInnerTask, { TaskType } from './UserInnerTask'
 
 // EQCjrNjgzRowoSpiQO7b7qzVK9PIXNGDep6Z6ALo5mMF1ibf
 
@@ -71,6 +73,15 @@ export default class User extends Model {
     //
   }
 
+  @HasOne(() => Status)
+  get status(): Status {
+    return this.getDataValue('status')
+  }
+
+  set status(w: Status) {
+    //
+  }
+
   @BeforeUpdate
   @BeforeCreate
   static makeLowerCase(instance: User): void {
@@ -80,22 +91,40 @@ export default class User extends Model {
 
   static async findOrCreateUser(id: number): Promise<User> {
     let user = await User.findByPk(id, {
-      include: [Wallet, InitFavorabilityTest],
+      include: [Wallet, InitFavorabilityTest, Status],
     })
+    let needUpdate = false
     if (!user) {
       user = await User.create({ id })
+      needUpdate = true
     }
     if (!user.wallet) {
       await Wallet.getUnusedWallet(id)
+      needUpdate = true
     }
+    let initFavorabilityTest = user.initFavorabilityTest
     if (!user.initFavorabilityTest) {
-      await InitFavorabilityTest.create({
+      initFavorabilityTest = await InitFavorabilityTest.create({
         userId: user.id,
       })
+      needUpdate = true
     }
-    await user.reload({
-      include: [Wallet, InitFavorabilityTest],
-    })
+    if (!user.status) {
+      let initFavorability = 0
+      if (initFavorabilityTest.finished) {
+        initFavorability = initFavorabilityTest.score
+      }
+      await Status.create({
+        userId: user.id,
+        initFavorability,
+      })
+      needUpdate = true
+    }
+    if (needUpdate) {
+      await user.reload({
+        include: [Wallet, InitFavorabilityTest, Status],
+      })
+    }
     return user
   }
 
@@ -109,22 +138,7 @@ export default class User extends Model {
     await this.save()
   }
 
-  // static async findByUserId(id: number): Promise<User | null> {
-  //   return await Bot.findByPk(id)
-  // }
-
-  // getData<T extends SandbagsBotBaseTrigger = any>(): SandbagsBot<T> {
-  //   let trigger: any
-
-  //   if (this.trigger) {
-  //     trigger = this.trigger.getData()
-  //   }
-
-  //   return {
-  //     id: this.id,
-  //     owner: toChecksumAddress(this.owner),
-  //     trigger,
-  //     code: this.code,
-  //   }
-  // }
+  async addTask(type: TaskType, runAt: Date): Promise<UserInnerTask> {
+    return await UserInnerTask.addTask(this.id, type, runAt)
+  }
 }

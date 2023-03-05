@@ -8,6 +8,7 @@ import setLanguageReply from './replies/SetLanguage'
 import initFavorabilityTestReply from './replies/InitFavorabilityTest'
 import showMenuReply from './replies/ShowMenu'
 import tokenReply from './replies/Token'
+import statusReply from './replies/Status'
 
 const { DEBUG } = process.env
 
@@ -46,6 +47,7 @@ export default class Bot {
     initFavorabilityTestReply.register(this.bot)
     showMenuReply.register(this.bot)
     tokenReply.register(this.bot)
+    statusReply.register(this.bot)
   }
 
   async start(): Promise<void> {

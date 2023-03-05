@@ -3,6 +3,7 @@ import { UserLanguage } from '../../db/models/User'
 import { MeetonContext } from '../types'
 import replyOptionQuestion from '../utils/replyOptionQuestions'
 import Reply from './base'
+import showMenuReply from './ShowMenu'
 
 interface CallbackData {
   userId: number
@@ -100,6 +101,7 @@ export class InitFavorabilityTestReply extends Reply {
     if (initFavorabilityTest.finished) {
       const successMsg = i18n.t('initFavorabilityTest.success')
       await ctx.reply(successMsg)
+      await showMenuReply.reply(ctx)
       return
     }
     await this.reply(ctx)
