@@ -18,6 +18,13 @@ import { addTime } from '../../utils/time'
 import User from './User'
 import CONSTANTS from '../../constants'
 
+const {
+  favorabilityTreasureRarityWeightMap,
+  favorabilityTargetLevelWeightMap,
+  targetLevelTimeCostMap,
+  targetLevelMovementCostMap,
+} = CONSTANTS
+
 @Table({
   modelName: 'travel',
 })
@@ -82,7 +89,7 @@ export default class Travel extends Model {
     const { movementLevel, favorabilityLevel } = status
     // random target
     const maxTargetLevel = movementLevel
-    const targetWeights = CONSTANTS.favorabilityTargetLevelWeightMap[
+    const targetWeights = favorabilityTargetLevelWeightMap[
       favorabilityLevel
     ].slice(0, maxTargetLevel + 1)
     const tragetLevel = randomMapPick(
@@ -97,7 +104,7 @@ export default class Travel extends Model {
     const target = randomPick(targets)
     // random treasure
     const treasureWeights =
-      CONSTANTS.favorabilityTreasureRarityWeightMap[favorabilityLevel]
+      favorabilityTreasureRarityWeightMap[favorabilityLevel]
     const treasureRarity = randomMapPick(
       treasureWeights.map((weight, i) => ({
         data: i,
@@ -108,10 +115,7 @@ export default class Travel extends Model {
       where: { level: tragetLevel, rarity: treasureRarity },
     })
     const treasure = randomPick(treasures)
-    const endAt = addTime(
-      startedAt,
-      CONSTANTS.targetLevelTimeCostMap[tragetLevel]
-    )
+    const endAt = addTime(startedAt, targetLevelTimeCostMap[tragetLevel])
     return await Travel.create({
       userId: id,
       targetId: target.id,
@@ -139,7 +143,7 @@ export class TravelTarget extends Model {
   }
 
   get movementCost(): number {
-    return CONSTANTS.targetLevelMovementCostMap[this.level]
+    return targetLevelMovementCostMap[this.level]
   }
 }
 

@@ -13,11 +13,11 @@ import {
   Model,
   Default,
 } from 'sequelize-typescript'
-import { pointInMap } from '../../utils/time'
+import { pointInMap } from '../../utils'
 import User from './User'
+import CONSTANTS from '../../constants'
 
-const FavorabilityLevelMap = [10, 150, 300, 1000, 2000, 5000]
-const MovementLevelMap = [10, 20, 60, 120, 300]
+const { favorabilityLevelMap, movementLevelMap } = CONSTANTS
 
 @Table({
   modelName: 'status',
@@ -50,19 +50,19 @@ export default class Status extends Model {
   }
 
   get favorabilityLevel(): number {
-    return pointInMap(this.favorability, FavorabilityLevelMap)
+    return pointInMap(this.favorability, favorabilityLevelMap)
   }
 
   get isMaxFavorabilityLevel(): boolean {
     const { favorabilityLevel } = this
-    return favorabilityLevel === FavorabilityLevelMap.length - 1
+    return favorabilityLevel === favorabilityLevelMap.length - 1
   }
 
   get nextLevelFavorability(): number {
     const { favorabilityLevel } = this
     return (
-      FavorabilityLevelMap[favorabilityLevel + 1] ??
-      FavorabilityLevelMap[FavorabilityLevelMap.length - 1]
+      favorabilityLevelMap[favorabilityLevel + 1] ??
+      favorabilityLevelMap[favorabilityLevelMap.length - 1]
     )
   }
 
@@ -82,19 +82,19 @@ export default class Status extends Model {
   }
 
   get movementLevel(): number {
-    return pointInMap(this.movement, MovementLevelMap)
+    return pointInMap(this.movement, movementLevelMap)
   }
 
   get isMaxMovementLevel(): boolean {
     const { movementLevel } = this
-    return movementLevel === MovementLevelMap.length - 1
+    return movementLevel === movementLevelMap.length - 1
   }
 
   get nextLevelMovement(): number {
     const { movementLevel } = this
     return (
-      MovementLevelMap[movementLevel + 1] ??
-      MovementLevelMap[MovementLevelMap.length - 1]
+      movementLevelMap[movementLevel + 1] ??
+      movementLevelMap[movementLevelMap.length - 1]
     )
   }
 

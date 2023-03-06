@@ -20,6 +20,9 @@ const favorabilityTreasureRarityWeightMap = [
 
 const targetLevelMovementCostMap = [10, 20, 60, 120, 300]
 
+const favorabilityLevelMap = [10, 150, 300, 1000, 2000, 5000]
+const movementLevelMap = [10, 20, 60, 120, 300]
+
 const targetLevelTimeCostMap = [
   timeNumber.hour * 4,
   timeNumber.hour * 8,
@@ -29,6 +32,8 @@ const targetLevelTimeCostMap = [
 ]
 
 const CONSTANTS = {
+  favorabilityLevelMap,
+  movementLevelMap,
   startTravelTimeLimit: timeNumber.day,
   addMovementTimeLimit: timeNumber.hour * 4,
   cooldownTravelTimeLimit: timeNumber.day,
