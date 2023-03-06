@@ -13,6 +13,7 @@ import {
   Model,
   Default,
 } from 'sequelize-typescript'
+import { pointInMap } from '../../utils/time'
 import User from './User'
 
 const FavorabilityLevelMap = [10, 150, 300, 1000, 2000, 5000]
@@ -49,15 +50,7 @@ export default class Status extends Model {
   }
 
   get favorabilityLevel(): number {
-    const { favorability } = this
-    let lv = 0
-    for (let i = 0; i < FavorabilityLevelMap.length; i++) {
-      lv = i
-      if (favorability < FavorabilityLevelMap[i]) {
-        break
-      }
-    }
-    return lv
+    return pointInMap(this.favorability, FavorabilityLevelMap)
   }
 
   get isMaxFavorabilityLevel(): boolean {
@@ -89,15 +82,7 @@ export default class Status extends Model {
   }
 
   get movementLevel(): number {
-    const { movement } = this
-    let lv = 0
-    for (let i = 0; i < MovementLevelMap.length; i++) {
-      lv = i
-      if (movement < FavorabilityLevelMap[i]) {
-        break
-      }
-    }
-    return lv
+    return pointInMap(this.movement, MovementLevelMap)
   }
 
   get isMaxMovementLevel(): boolean {
@@ -113,8 +98,15 @@ export default class Status extends Model {
     )
   }
 
-  @ForeignKey(() => User)
+  // travel cooldown
   @AllowNull(true)
+  @Column(DataType.DATE)
+  get lastMovementAddedAt(): Date {
+    return this.getDataValue('lastMovementAddedAt')
+  }
+
+  @ForeignKey(() => User)
+  @AllowNull(false)
   @Column(DataType.INTEGER)
   get userId(): number {
     return this.getDataValue('userId')

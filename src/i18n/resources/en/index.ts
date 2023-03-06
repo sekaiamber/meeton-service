@@ -52,6 +52,7 @@ const ret = {
       token: 'NFT & Token',
       document: 'Document',
       market: 'Market',
+      admin: 'Admin',
     },
     coming: {
       template: '<b>🚧 Coming Soon 🚧</b>',

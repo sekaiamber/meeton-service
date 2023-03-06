@@ -18,7 +18,9 @@ import i18n from '../../i18n'
 import Wallet from './Wallet'
 import InitFavorabilityTest from './InitFavorabilityTest'
 import Status from './Status'
+import Location from './Location'
 import UserInnerTask, { TaskType } from './UserInnerTask'
+import { getNextRandomDatetime, timeNumber } from '../../utils/time'
 
 // EQCjrNjgzRowoSpiQO7b7qzVK9PIXNGDep6Z6ALo5mMF1ibf
 
@@ -55,6 +57,13 @@ export default class User extends Model {
     return this.getDataValue('languageInited')
   }
 
+  @AllowNull(false)
+  @Default(false)
+  @Column(DataType.BOOLEAN)
+  get isAdmin(): boolean {
+    return this.getDataValue('isAdmin')
+  }
+
   @HasOne(() => Wallet)
   get wallet(): Wallet {
     return this.getDataValue('wallet')
@@ -82,6 +91,15 @@ export default class User extends Model {
     //
   }
 
+  @HasOne(() => Location)
+  get location(): Location {
+    return this.getDataValue('location')
+  }
+
+  set location(w: Location) {
+    //
+  }
+
   @BeforeUpdate
   @BeforeCreate
   static makeLowerCase(instance: User): void {
@@ -91,7 +109,7 @@ export default class User extends Model {
 
   static async findOrCreateUser(id: number): Promise<User> {
     let user = await User.findByPk(id, {
-      include: [Wallet, InitFavorabilityTest, Status],
+      include: [Wallet, InitFavorabilityTest, Status, Location],
     })
     let needUpdate = false
     if (!user) {
@@ -120,9 +138,15 @@ export default class User extends Model {
       })
       needUpdate = true
     }
+    if (!user.location) {
+      await Location.create({
+        userId: user.id,
+      })
+      needUpdate = true
+    }
     if (needUpdate) {
       await user.reload({
-        include: [Wallet, InitFavorabilityTest, Status],
+        include: [Wallet, InitFavorabilityTest, Status, Location],
       })
     }
     return user
@@ -138,7 +162,16 @@ export default class User extends Model {
     await this.save()
   }
 
+  // tasks
   async addTask(type: TaskType, runAt: Date): Promise<UserInnerTask> {
     return await UserInnerTask.addTask(this.id, type, runAt)
+  }
+
+  async addStartTravel(): Promise<UserInnerTask> {
+    return await UserInnerTask.addTask(
+      this.id,
+      TaskType.startTravel,
+      getNextRandomDatetime(new Date(), timeNumber.day)
+    )
   }
 }

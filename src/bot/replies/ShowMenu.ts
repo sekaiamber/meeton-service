@@ -8,7 +8,7 @@ import statusReply from './Status'
 
 interface ShowMenuCallbackData {
   userId: number
-  key: 'chat' | 'status' | 'atlas' | 'token' | 'document' | 'market'
+  key: 'chat' | 'status' | 'atlas' | 'token' | 'document' | 'market' | 'admin'
 }
 
 interface BackMenuCallbackData {
@@ -18,11 +18,11 @@ interface BackMenuCallbackData {
 
 // ShowMenu::00000,key
 const showMenuActionReg =
-  /ShowMenu::[0-9]+,(chat|status|atlas|token|document|market)/
+  /ShowMenu::[0-9]+,(chat|status|atlas|token|document|market|admin)/
 // BackMenu::00000,0
 const backToMenuActionReg = /BackMenu::[0-9]+,(0|1)/
 
-const menu = [
+const menuMap = [
   ['chat', 'status'],
   ['atlas', 'token'],
   ['document', 'market'],
@@ -95,6 +95,12 @@ export class ShowMenuReply extends Reply {
           await comingReply.reply(mctx)
           break
         }
+        case 'admin': {
+          // TODO:
+          await ctx.deleteMessage()
+          await comingReply.reply(mctx)
+          break
+        }
         default:
           break
       }
@@ -110,17 +116,22 @@ export class ShowMenuReply extends Reply {
   }
 
   async reply(ctx: MeetonContext): Promise<void> {
-    const { i18n } = ctx.userModel
-    await replyMenu(
-      ctx,
-      i18n.t('menu.title'),
-      menu.map((row) =>
-        row.map((key) => ({
-          label: i18n.t(`menu.${key}`),
-          value: this.makeOptionValue(ctx, key),
-        }))
-      )
+    const { i18n, isAdmin } = ctx.userModel
+    const menu = menuMap.map((row) =>
+      row.map((key) => ({
+        label: i18n.t(`menu.${key}`),
+        value: this.makeOptionValue(ctx, key),
+      }))
     )
+    if (isAdmin) {
+      menu.push([
+        {
+          label: i18n.t('menu.admin'),
+          value: this.makeOptionValue(ctx, 'admin'),
+        },
+      ])
+    }
+    await replyMenu(ctx, i18n.t('menu.title'), menu)
   }
 }
 

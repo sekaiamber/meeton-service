@@ -50,7 +50,9 @@ export default class UserTaskRunner {
     }
     // 3. not found task.type
     throw new Error(
-      `cannot found task.type = ${(type as TaskState).toString()} or processor`
+      `cannot found task.type = ${(
+        type as unknown as TaskState
+      ).toString()} or processor`
     )
   }
 }

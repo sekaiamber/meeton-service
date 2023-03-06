@@ -25,3 +25,38 @@ export function drawProgressBar(
   dd[i - 1] = arrow
   return dd.join('')
 }
+
+export function randomPick<T>(source: T[]): T {
+  return source[Math.floor(Math.random() * source.length)]
+}
+
+export function pointInMap(point: number, map: number[]): number {
+  let lv = 0
+  for (let i = 0; i < map.length; i++) {
+    lv = i
+    if (point < map[i]) {
+      break
+    }
+  }
+  return lv
+}
+
+interface RandomMap<T> {
+  data: T
+  weight: number
+}
+
+export function randomMapPick<T>(source: Array<RandomMap<T>>): T {
+  if (source.length === 1) {
+    return source[0].data
+  }
+  const accumulateWeights = source.map((_, i) => {
+    return source
+      .slice(0, i + 1)
+      .map((rm) => rm.weight)
+      .reduce((a, b) => a + b, 0)
+  })
+  const point = Math.random() * accumulateWeights[accumulateWeights.length - 1]
+  const index = pointInMap(point, accumulateWeights)
+  return source[index].data
+}

@@ -17,6 +17,10 @@ import User from './User'
 
 export enum TaskType {
   test = 0,
+  startTravel = 1,
+  endTravel = 2,
+  addMovement = 3,
+  cooldownTravel = 4,
 }
 
 export enum TaskState {
