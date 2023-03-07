@@ -1,5 +1,8 @@
 import { timeNumber } from '../utils/time'
 
+export * from './targets'
+export * from './treasures'
+
 const favorabilityTargetLevelWeightMap = [
   [80, 18, 2, 0, 0],
   [40, 40, 19, 1, 0],

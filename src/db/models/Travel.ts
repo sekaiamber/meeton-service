@@ -17,6 +17,8 @@ import { randomMapPick, randomPick } from '../../utils'
 import { addTime } from '../../utils/time'
 import User from './User'
 import CONSTANTS from '../../constants'
+import targetRawDataMap from '../../constants/targets'
+import treasuresRawDataMap from '../../constants/treasures'
 
 const {
   favorabilityTreasureRarityWeightMap,
@@ -35,7 +37,7 @@ export default class Travel extends Model {
     return this.getDataValue('targetId')
   }
 
-  @HasOne(() => TravelTarget)
+  @BelongsTo(() => TravelTarget, 'targetId')
   get target(): TravelTarget {
     return this.getDataValue('target')
   }
@@ -50,7 +52,7 @@ export default class Travel extends Model {
     return this.getDataValue('treasureId')
   }
 
-  @HasOne(() => TravelTreasure)
+  @BelongsTo(() => TravelTreasure, 'treasureId')
   get treasure(): TravelTreasure {
     return this.getDataValue('treasure')
   }
@@ -84,14 +86,15 @@ export default class Travel extends Model {
   static async createByUser(
     user: User,
     startedAt = new Date()
-  ): Promise<Travel> {
+  ): Promise<Travel | undefined> {
     const { status, id } = user
     const { movementLevel, favorabilityLevel } = status
+    if (movementLevel === 0) return undefined
     // random target
     const maxTargetLevel = movementLevel
     const targetWeights = favorabilityTargetLevelWeightMap[
       favorabilityLevel
-    ].slice(0, maxTargetLevel + 1)
+    ].slice(0, maxTargetLevel)
     const tragetLevel = randomMapPick(
       targetWeights.map((weight, i) => ({
         data: i,
@@ -116,18 +119,38 @@ export default class Travel extends Model {
     })
     const treasure = randomPick(treasures)
     const endAt = addTime(startedAt, targetLevelTimeCostMap[tragetLevel])
-    return await Travel.create({
-      userId: id,
-      targetId: target.id,
-      treasureId: treasure.id,
-      startedAt,
-      endAt,
-    })
+    const transaction = await this.sequelize!.transaction()
+    try {
+      const travel = await Travel.create(
+        {
+          userId: id,
+          targetId: target.id,
+          treasureId: treasure.id,
+          startedAt,
+          endAt,
+        },
+        {
+          transaction,
+        }
+      )
+      await user.addMovement(-target.movementCost, transaction)
+      await transaction.commit()
+      return travel
+    } catch (error) {
+      await transaction.rollback()
+      return undefined
+    }
   }
 }
 
 @Table({
   modelName: 'travelTarget',
+  indexes: [
+    {
+      fields: ['key'],
+      unique: true,
+    },
+  ],
 })
 export class TravelTarget extends Model {
   @AllowNull(false)
@@ -145,10 +168,20 @@ export class TravelTarget extends Model {
   get movementCost(): number {
     return targetLevelMovementCostMap[this.level]
   }
+
+  get description(): string {
+    return targetRawDataMap[this.key]?.description ?? ''
+  }
 }
 
 @Table({
   modelName: 'travelTreasure',
+  indexes: [
+    {
+      fields: ['key'],
+      unique: true,
+    },
+  ],
 })
 export class TravelTreasure extends Model {
   @AllowNull(false)
@@ -167,5 +200,9 @@ export class TravelTreasure extends Model {
   @Column(DataType.CHAR(20))
   get key(): string {
     return this.getDataValue('key')
+  }
+
+  get description(): string {
+    return treasuresRawDataMap[this.key]?.description ?? ''
   }
 }

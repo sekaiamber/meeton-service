@@ -5,6 +5,7 @@ import InitFavorabilityTest from './InitFavorabilityTest'
 import Status from './Status'
 import UserInnerTask from './UserInnerTask'
 import Location from './Location'
+import Travel, { TravelTarget, TravelTreasure } from './Travel'
 
 export {
   Constant,
@@ -14,4 +15,7 @@ export {
   Status,
   UserInnerTask,
   Location,
+  Travel,
+  TravelTarget,
+  TravelTreasure,
 }

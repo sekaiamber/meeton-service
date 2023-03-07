@@ -5,10 +5,12 @@ import Reply from './base'
 import comingReply from './Coming'
 import tokenReply from './Token'
 import statusReply from './Status'
+import testReply from './Test'
 
 interface ShowMenuCallbackData {
   userId: number
-  key: 'chat' | 'status' | 'atlas' | 'token' | 'document' | 'market' | 'admin'
+  // eslint-disable-next-line prettier/prettier
+  key: 'chat' | 'status' | 'atlas' | 'token' | 'document' | 'market' | 'admin' | 'test'
 }
 
 interface BackMenuCallbackData {
@@ -18,7 +20,7 @@ interface BackMenuCallbackData {
 
 // ShowMenu::00000,key
 const showMenuActionReg =
-  /ShowMenu::[0-9]+,(chat|status|atlas|token|document|market|admin)/
+  /ShowMenu::[0-9]+,(chat|status|atlas|token|document|market|admin|test)/
 // BackMenu::00000,0
 const backToMenuActionReg = /BackMenu::[0-9]+,(0|1)/
 
@@ -101,6 +103,12 @@ export class ShowMenuReply extends Reply {
           await comingReply.reply(mctx)
           break
         }
+        case 'test': {
+          // TODO:
+          await ctx.deleteMessage()
+          await testReply.reply(mctx)
+          break
+        }
         default:
           break
       }
@@ -128,6 +136,12 @@ export class ShowMenuReply extends Reply {
         {
           label: i18n.t('menu.admin'),
           value: this.makeOptionValue(ctx, 'admin'),
+        },
+      ])
+      menu.push([
+        {
+          label: i18n.t('menu.test'),
+          value: this.makeOptionValue(ctx, 'test'),
         },
       ])
     }

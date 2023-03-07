@@ -21,6 +21,7 @@ import Status from './Status'
 import Location from './Location'
 import UserInnerTask, { TaskType } from './UserInnerTask'
 import { getNextRandomDatetime, timeNumber } from '../../utils/time'
+import { Transaction } from 'sequelize'
 
 // EQCjrNjgzRowoSpiQO7b7qzVK9PIXNGDep6Z6ALo5mMF1ibf
 
@@ -107,9 +108,16 @@ export default class User extends Model {
     // instance.setDataValue('checksum', instance.checksum.toLowerCase())
   }
 
+  private static readonly includeTables = [
+    Wallet,
+    InitFavorabilityTest,
+    Status,
+    Location,
+  ]
+
   static async findOrCreateUser(id: number): Promise<User> {
     let user = await User.findByPk(id, {
-      include: [Wallet, InitFavorabilityTest, Status, Location],
+      include: User.includeTables,
     })
     let needUpdate = false
     if (!user) {
@@ -146,7 +154,7 @@ export default class User extends Model {
     }
     if (needUpdate) {
       await user.reload({
-        include: [Wallet, InitFavorabilityTest, Status, Location],
+        include: User.includeTables,
       })
     }
     return user
@@ -160,6 +168,13 @@ export default class User extends Model {
     this.setDataValue('language', language)
     this.setDataValue('languageInited', true)
     await this.save()
+  }
+
+  async addMovement(addBy: number, t?: Transaction): Promise<void> {
+    await this.status.addMovement(addBy, t)
+    await this.reload({
+      include: User.includeTables,
+    })
   }
 
   // tasks

@@ -11,6 +11,9 @@ const {
   Status,
   UserInnerTask,
   Location,
+  Travel,
+  TravelTarget,
+  TravelTreasure,
 } = Models
 
 const sequelize = new Sequelize({
@@ -34,6 +37,9 @@ const sequelize = new Sequelize({
     Status,
     UserInnerTask,
     Location,
+    TravelTarget,
+    TravelTreasure,
+    Travel,
   ],
 })
 

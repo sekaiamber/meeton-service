@@ -16,6 +16,7 @@ import {
 import { pointInMap } from '../../utils'
 import User from './User'
 import CONSTANTS from '../../constants'
+import { Transaction } from 'sequelize'
 
 const { favorabilityLevelMap, movementLevelMap } = CONSTANTS
 
@@ -114,4 +115,13 @@ export default class Status extends Model {
 
   @BelongsTo(() => User)
   user?: User
+
+  async addMovement(by: number, t?: Transaction): Promise<void> {
+    await this.increment('movement', { by, transaction: t })
+    await this.reload({ transaction: t })
+    if (this.maxMovement < this.movement) {
+      await this.setDataValue('movement', this.maxMovement)
+      await this.save({ transaction: t })
+    }
+  }
 }

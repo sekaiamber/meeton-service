@@ -53,6 +53,7 @@ const ret = {
       document: 'Document',
       market: 'Market',
       admin: 'Admin',
+      test: 'Test Callback',
     },
     coming: {
       template: '<b>🚧 Coming Soon 🚧</b>',
