@@ -1,3 +1,4 @@
+import { Transaction } from 'sequelize'
 import {
   Table,
   Column,
@@ -13,26 +14,24 @@ import {
   Model,
   Default,
 } from 'sequelize-typescript'
+import Travel from './Travel'
 import User from './User'
-
-export enum Place {
-  home = 0,
-  commonOutside = 1,
-}
 
 @Table({
   modelName: 'location',
 })
 export default class Location extends Model {
-  @AllowNull(false)
-  @Default(Place.home)
+  @AllowNull(true)
   @Column(DataType.INTEGER)
-  get place(): Place {
-    return this.getDataValue('place')
+  get onTravelId(): number | null {
+    return this.getDataValue('onTravelId')
   }
 
+  @BelongsTo(() => Travel, 'onTravelId')
+  travel?: Travel
+
   get isAtHome(): boolean {
-    return this.place === Place.home
+    return this.onTravelId === null
   }
 
   @AllowNull(true)
@@ -56,4 +55,31 @@ export default class Location extends Model {
 
   @BelongsTo(() => User)
   user?: User
+
+  async onTravel(
+    travel: Travel | null,
+    transaction?: Transaction
+  ): Promise<void> {
+    if (travel === null) {
+      if (this.onTravelId !== null) {
+        const lastTravel = await Travel.findByPk(this.onTravelId, {
+          transaction,
+        })
+        if (lastTravel) {
+          this.setDataValue('lastTravelStartedAt', lastTravel.startedAt)
+          this.setDataValue('lastTravelEndAt', lastTravel.endAt)
+        }
+      }
+      this.setDataValue('onTravelId', null)
+    } else {
+      this.setDataValue('onTravelId', travel.id)
+    }
+    await this.save({ transaction })
+  }
+
+  async reachHome(): Promise<void> {
+    await this.onTravel(null)
+    const user = await User.findOrCreateUser(this.userId)
+    await user.status.addMaxMovement(2)
+  }
 }

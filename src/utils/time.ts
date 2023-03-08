@@ -21,3 +21,13 @@ export function getNextRandomDatetime(start: Date, max: number, min = 0): Date {
   const add = Math.random() * diff
   return addTime(start, add)
 }
+
+export function timeScale(
+  target: Date,
+  scale: number,
+  from = new Date()
+): Date {
+  if (scale === 1) return target
+  const diff = Math.floor((target.getTime() - from.getTime()) * scale)
+  return addTime(from, diff)
+}

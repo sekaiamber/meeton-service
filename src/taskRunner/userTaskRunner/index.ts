@@ -1,7 +1,12 @@
 import { Op } from 'sequelize'
 import { UserInnerTask } from '../../db/models'
 import { TaskState, TaskType } from '../../db/models/UserInnerTask'
+import addMovementProcessor from './addMovementProcessor'
+import cooldownTravelProcessor from './cooldownTravelProcessor'
+import endTravelProcessor from './endTravelProcessor'
+import startTravelProcessor from './startTravelProcessor'
 import testProcessor from './testProcessor'
+import tryStartTravelProcessor from './tryStartTravelProcessor'
 
 export default class UserTaskRunner {
   async init(): Promise<void> {
@@ -43,6 +48,26 @@ export default class UserTaskRunner {
     switch (type) {
       case TaskType.test: {
         await testProcessor(task)
+        return
+      }
+      case TaskType.startTravel: {
+        await startTravelProcessor(task)
+        return
+      }
+      case TaskType.tryStartTravel: {
+        await tryStartTravelProcessor(task)
+        return
+      }
+      case TaskType.endTravel: {
+        await endTravelProcessor(task)
+        return
+      }
+      case TaskType.addMovement: {
+        await addMovementProcessor(task)
+        return
+      }
+      case TaskType.cooldownTravel: {
+        await cooldownTravelProcessor(task)
         return
       }
       default:

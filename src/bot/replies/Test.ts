@@ -10,8 +10,8 @@ export class TestReply extends Reply {
   }
 
   async reply(ctx: MeetonContext): Promise<void> {
-    await ctx.userModel.addMovement(4)
-    await ctx.reply(ctx.userModel.status.movement.toString())
+    await ctx.userModel.initFavorabilityTest.onFinish()
+    await ctx.reply('done')
   }
 }
 

@@ -65,14 +65,17 @@ export class InitFavorabilityTestReply extends Reply {
     ctx: MeetonContext,
     index: number
   ): Promise<void> {
-    const { i18n } = ctx.userModel
+    const { i18n, initFavorabilityTest, isAdmin } = ctx.userModel
+    if (initFavorabilityTest.finished) return
     await replyOptionQuestion(
       ctx,
       {
         question: i18n.t(`${i18nPrefix}.${index}.question`),
         options: [
           {
-            label: i18n.t(`${i18nPrefix}.${index}.options.0.label`),
+            label: `${i18n.t(`${i18nPrefix}.${index}.options.0.label`)}${
+              isAdmin ? '(+)' : ''
+            }`,
             value: this.makeOptionValue(
               ctx,
               index,
@@ -102,6 +105,7 @@ export class InitFavorabilityTestReply extends Reply {
       const successMsg = i18n.t('initFavorabilityTest.success')
       await ctx.reply(successMsg)
       await showMenuReply.reply(ctx)
+      initFavorabilityTest.onFinish().catch((e) => console.log(e))
       return
     }
     await this.reply(ctx)

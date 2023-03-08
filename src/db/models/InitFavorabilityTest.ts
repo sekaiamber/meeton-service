@@ -13,6 +13,7 @@ import {
   Model,
   Default,
 } from 'sequelize-typescript'
+import Status from './Status'
 import User from './User'
 
 export const CHAR_UNDO = '_'
@@ -92,6 +93,19 @@ export default class InitFavorabilityTest extends Model {
     ra.splice(index, 1, answer)
     this.setDataValue('result', ra.join(''))
     await this.save()
+  }
+
+  async onFinish(): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const user = (await User.findByPk(this.userId, { include: [Status] }))!
+    user.status.setDataValue('initFavorability', this.score)
+    await user.status.save()
+    // addMovement
+    await user.addAddMovementTask()
+    // startTravel
+    if (this.score >= 6) {
+      await user.addStartTravelTask()
+    }
   }
 
   // static async findByUserId(id: number): Promise<User | null> {

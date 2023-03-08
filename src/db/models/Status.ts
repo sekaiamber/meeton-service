@@ -17,6 +17,7 @@ import { pointInMap } from '../../utils'
 import User from './User'
 import CONSTANTS from '../../constants'
 import { Transaction } from 'sequelize'
+import { timeNumber } from '../../utils/time'
 
 const { favorabilityLevelMap, movementLevelMap } = CONSTANTS
 
@@ -99,11 +100,25 @@ export default class Status extends Model {
     )
   }
 
+  get isSleeping(): boolean {
+    if (this.lastTravelEndAt === null) return false
+    const now = new Date()
+    const diff = now.getTime() - this.lastTravelEndAt.getTime()
+    return diff < timeNumber.hour
+  }
+
   // travel cooldown
   @AllowNull(true)
   @Column(DataType.DATE)
-  get lastMovementAddedAt(): Date {
-    return this.getDataValue('lastMovementAddedAt')
+  get lastTravelEndAt(): Date | null {
+    return this.getDataValue('lastTravelEndAt')
+  }
+
+  @AllowNull(false)
+  @Default(false)
+  @Column(DataType.BOOLEAN)
+  get travelInWaiting(): boolean {
+    return this.getDataValue('travelInWaiting')
   }
 
   @ForeignKey(() => User)
@@ -123,5 +138,17 @@ export default class Status extends Model {
       await this.setDataValue('movement', this.maxMovement)
       await this.save({ transaction: t })
     }
+    // check if there is travel in waiting
+    if (this.travelInWaiting) {
+      const user = await User.findOrCreateUser(this.userId)
+      await user.addStartTravelTask()
+      this.setDataValue('travelInWaiting', false)
+      await this.save()
+    }
+  }
+
+  async addMaxMovement(by: number, t?: Transaction): Promise<void> {
+    await this.increment('maxMovement', { by, transaction: t })
+    await this.reload({ transaction: t })
   }
 }

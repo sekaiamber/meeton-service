@@ -26,6 +26,10 @@ export function drawProgressBar(
   return dd.join('')
 }
 
+export function randomGt(gt = 0.5): boolean {
+  return Math.random() > gt
+}
+
 export function randomPick<T>(source: T[]): T {
   return source[Math.floor(Math.random() * source.length)]
 }

@@ -83,11 +83,9 @@ export default class Travel extends Model {
   @BelongsTo(() => User)
   user?: User
 
-  static async createByUser(
-    user: User,
-    startedAt = new Date()
-  ): Promise<Travel | undefined> {
-    const { status, id } = user
+  static async createByUserIdNow(userId: number): Promise<Travel | undefined> {
+    const user = await User.findOrCreateUser(userId)
+    const { status, id, location } = user
     const { movementLevel, favorabilityLevel } = status
     if (movementLevel === 0) return undefined
     // random target
@@ -118,6 +116,7 @@ export default class Travel extends Model {
       where: { level: tragetLevel, rarity: treasureRarity },
     })
     const treasure = randomPick(treasures)
+    const startedAt = new Date()
     const endAt = addTime(startedAt, targetLevelTimeCostMap[tragetLevel])
     const transaction = await this.sequelize!.transaction()
     try {
@@ -134,6 +133,7 @@ export default class Travel extends Model {
         }
       )
       await user.addMovement(-target.movementCost, transaction)
+      await location.onTravel(travel, transaction)
       await transaction.commit()
       return travel
     } catch (error) {

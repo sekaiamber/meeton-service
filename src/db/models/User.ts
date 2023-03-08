@@ -19,9 +19,10 @@ import Wallet from './Wallet'
 import InitFavorabilityTest from './InitFavorabilityTest'
 import Status from './Status'
 import Location from './Location'
-import UserInnerTask, { TaskType } from './UserInnerTask'
-import { getNextRandomDatetime, timeNumber } from '../../utils/time'
+import UserInnerTask, { TaskState, TaskType } from './UserInnerTask'
+import { addTime, getNextRandomDatetime, timeNumber } from '../../utils/time'
 import { Transaction } from 'sequelize'
+import Travel from './Travel'
 
 // EQCjrNjgzRowoSpiQO7b7qzVK9PIXNGDep6Z6ALo5mMF1ibf
 
@@ -99,6 +100,12 @@ export default class User extends Model {
 
   set location(w: Location) {
     //
+  }
+
+  get isReadyForNextTravel(): boolean {
+    if (this.status.isSleeping) return false
+    if (this.status.movementLevel === 0) return false
+    return true
   }
 
   @BeforeUpdate
@@ -182,11 +189,61 @@ export default class User extends Model {
     return await UserInnerTask.addTask(this.id, type, runAt)
   }
 
-  async addStartTravel(): Promise<UserInnerTask> {
+  async addStartTravelTask(): Promise<UserInnerTask> {
     return await UserInnerTask.addTask(
       this.id,
       TaskType.startTravel,
       getNextRandomDatetime(new Date(), timeNumber.day)
+    )
+  }
+
+  async addTryStartTravelTask(
+    startTravelTask: UserInnerTask
+  ): Promise<UserInnerTask> {
+    return await UserInnerTask.addTask(
+      this.id,
+      TaskType.tryStartTravel,
+      addTime(startTravelTask.createdAt, timeNumber.day),
+      startTravelTask.createdAt
+    )
+  }
+
+  async addEndTravelTask(travel: Travel): Promise<UserInnerTask> {
+    return await UserInnerTask.addTask(
+      this.id,
+      TaskType.endTravel,
+      travel.endAt
+    )
+  }
+
+  async addAddMovementTask(basedAt = new Date()): Promise<UserInnerTask> {
+    return await UserInnerTask.addTask(
+      this.id,
+      TaskType.addMovement,
+      addTime(basedAt, timeNumber.hour * 4)
+    )
+  }
+
+  async cancelAllAddMovementTask(): Promise<void> {
+    await UserInnerTask.update(
+      {
+        state: TaskState.canceled,
+      },
+      {
+        where: {
+          state: TaskState.wait,
+          type: TaskType.addMovement,
+          userId: this.id,
+        },
+      }
+    )
+  }
+
+  async addCooldownTravelTask(basedAt = new Date()): Promise<UserInnerTask> {
+    return await UserInnerTask.addTask(
+      this.id,
+      TaskType.cooldownTravel,
+      addTime(basedAt, timeNumber.day)
     )
   }
 }
