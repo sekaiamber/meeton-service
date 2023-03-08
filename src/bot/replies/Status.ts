@@ -1,4 +1,6 @@
 import { Telegraf } from 'telegraf'
+import { UserInnerTask } from '../../db/models'
+import { TaskState, TaskTypeDesc } from '../../db/models/UserInnerTask'
 import { drawProgressBar } from '../../utils'
 import { MeetonContext } from '../types'
 import replyMenu from '../utils/replyMenu'
@@ -10,7 +12,7 @@ export class StatusReply extends Reply {
   }
 
   async reply(ctx: MeetonContext): Promise<void> {
-    const { i18n, status } = ctx.userModel
+    const { i18n, status, isAdmin, id } = ctx.userModel
 
     const favorabilityProgress = drawProgressBar(
       status.nextLevelFavorability,
@@ -22,7 +24,7 @@ export class StatusReply extends Reply {
       status.movement
     )
 
-    const msg = i18n.t('status.template', {
+    let msg = i18n.t('status.template', {
       favorability: status.favorability,
       lv: status.favorabilityLevel,
       favorabilityProcess: favorabilityProgress,
@@ -31,6 +33,34 @@ export class StatusReply extends Reply {
       movementMax: status.maxMovement,
       movementProcess: movementProgress,
     })
+
+    if (isAdmin) {
+      const adminMsgs = ['---------', '[ADMIN]']
+      adminMsgs.push(
+        `<b>isSleeping</b>: ${status.isSleeping ? 'true' : 'false'}`
+      )
+      adminMsgs.push(
+        `<b>travelInWaiting</b>: ${status.travelInWaiting ? 'true' : 'false'}`
+      )
+      adminMsgs.push(
+        `<b>lastTravelEndAt</b>: ${
+          status.lastTravelEndAt ? status.lastTravelEndAt.toISOString() : 'null'
+        }`
+      )
+      const tasks = await UserInnerTask.findAll({
+        where: {
+          state: TaskState.wait,
+          userId: id,
+        },
+      })
+      adminMsgs.push('<b>future events</b>:')
+      tasks.forEach((task) => {
+        adminMsgs.push(
+          `<b>${task.runAt.toISOString()}</b>: ${TaskTypeDesc[task.type]}`
+        )
+      })
+      msg += adminMsgs.join('\n')
+    }
     await replyMenu(ctx, msg, [
       [
         {

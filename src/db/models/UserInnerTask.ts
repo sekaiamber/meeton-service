@@ -25,6 +25,15 @@ export enum TaskType {
   cooldownTravel = 5,
 }
 
+export const TaskTypeDesc = {
+  [TaskType.test]: 'Test event',
+  [TaskType.startTravel]: 'Determining whether to start a new travel',
+  [TaskType.tryStartTravel]: 'Retry `startTravel` event',
+  [TaskType.endTravel]: 'Finish a travel',
+  [TaskType.addMovement]: 'Add 2 movement',
+  [TaskType.cooldownTravel]: 'Finish sleeping',
+}
+
 export enum TaskState {
   wait = 'wait',
   process = 'process',
