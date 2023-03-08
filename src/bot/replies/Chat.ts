@@ -102,7 +102,6 @@ export class ChatReply extends Reply {
   }
 
   async reply(ctx: MeetonContext): Promise<void> {
-    console.log(1)
     const { i18n, status } = ctx.userModel
 
     if (status.isSleeping) {
