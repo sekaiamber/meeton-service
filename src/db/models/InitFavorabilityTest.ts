@@ -106,6 +106,7 @@ export default class InitFavorabilityTest extends Model {
     if (this.score >= 6) {
       await user.addStartTravelTask()
     }
+    await user.addRecoverTalkPointsTask()
   }
 
   // static async findByUserId(id: number): Promise<User | null> {

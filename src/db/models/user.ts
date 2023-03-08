@@ -246,4 +246,12 @@ export default class User extends Model {
       addTime(basedAt, timeNumber.day)
     )
   }
+
+  async addRecoverTalkPointsTask(basedAt = new Date()): Promise<UserInnerTask> {
+    return await UserInnerTask.addTask(
+      this.id,
+      TaskType.recoverTalkPoints,
+      addTime(basedAt, timeNumber.day)
+    )
+  }
 }

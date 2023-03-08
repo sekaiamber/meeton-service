@@ -4,6 +4,7 @@ import { TaskState, TaskType } from '../../db/models/UserInnerTask'
 import addMovementProcessor from './addMovementProcessor'
 import cooldownTravelProcessor from './cooldownTravelProcessor'
 import endTravelProcessor from './endTravelProcessor'
+import recoverTalkPointsProcessor from './recoverTalkPointsProcessor'
 import startTravelProcessor from './startTravelProcessor'
 import testProcessor from './testProcessor'
 import tryStartTravelProcessor from './tryStartTravelProcessor'
@@ -68,6 +69,10 @@ export default class UserTaskRunner {
       }
       case TaskType.cooldownTravel: {
         await cooldownTravelProcessor(task)
+        return
+      }
+      case TaskType.recoverTalkPoints: {
+        await recoverTalkPointsProcessor(task)
         return
       }
       default:

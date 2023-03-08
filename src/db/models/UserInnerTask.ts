@@ -23,6 +23,7 @@ export enum TaskType {
   endTravel = 3,
   addMovement = 4,
   cooldownTravel = 5,
+  recoverTalkPoints = 6,
 }
 
 export const TaskTypeDesc = {
@@ -32,6 +33,7 @@ export const TaskTypeDesc = {
   [TaskType.endTravel]: 'Finish a travel',
   [TaskType.addMovement]: 'Add 2 movement',
   [TaskType.cooldownTravel]: 'Finish sleeping',
+  [TaskType.recoverTalkPoints]: 'Recover TalkPoints to 5',
 }
 
 export enum TaskState {

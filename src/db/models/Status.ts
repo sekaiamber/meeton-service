@@ -107,6 +107,19 @@ export default class Status extends Model {
     return diff < timeNumber.hour
   }
 
+  // talk points
+  @AllowNull(false)
+  @Default(0)
+  @Column(DataType.INTEGER)
+  get talkPoints(): number {
+    return this.getDataValue('talkPoints')
+  }
+
+  async recoverTalkPoints(): Promise<void> {
+    this.setDataValue('talkPoints', 5)
+    await this.save()
+  }
+
   // travel cooldown
   @AllowNull(true)
   @Column(DataType.DATE)
