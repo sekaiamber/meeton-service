@@ -16,6 +16,10 @@ Next Level: {{favorabilityNext}}
 
 `
 
+const adminTemplate = `<b>user id</b>: {{userId}}
+<b>time scale</b>: {{timeScale}}({{speedUp}} times speed up)
+`
+
 const ret = {
   translation: {
     setLanguage: {
@@ -52,8 +56,8 @@ const ret = {
       token: 'NFT & Token',
       document: 'Document',
       market: 'Market',
-      admin: 'Admin',
-      test: 'Test Callback',
+      admin: '[ADMIN] System',
+      test: '[ADMIN] Test Callback',
     },
     coming: {
       template: '<b>🚧 Coming Soon 🚧</b>',
@@ -63,6 +67,9 @@ const ret = {
     },
     status: {
       template: statusTemplate,
+    },
+    admin: {
+      template: adminTemplate,
     },
   },
 }

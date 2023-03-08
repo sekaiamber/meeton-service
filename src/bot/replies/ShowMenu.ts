@@ -6,6 +6,7 @@ import comingReply from './Coming'
 import tokenReply from './Token'
 import statusReply from './Status'
 import testReply from './Test'
+import adminReply from './Admin'
 
 interface ShowMenuCallbackData {
   userId: number
@@ -69,7 +70,6 @@ export class ShowMenuReply extends Reply {
           break
         }
         case 'status': {
-          // TODO:
           await ctx.deleteMessage()
           await statusReply.reply(mctx)
           break
@@ -98,9 +98,8 @@ export class ShowMenuReply extends Reply {
           break
         }
         case 'admin': {
-          // TODO:
           await ctx.deleteMessage()
-          await comingReply.reply(mctx)
+          await adminReply.reply(mctx)
           break
         }
         case 'test': {
