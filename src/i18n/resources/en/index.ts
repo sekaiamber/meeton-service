@@ -67,6 +67,7 @@ const ret = {
     },
     status: {
       template: statusTemplate,
+      notAtHome: '<i>[MeeTon is not at home...]</i>\n',
     },
     admin: {
       template: adminTemplate,

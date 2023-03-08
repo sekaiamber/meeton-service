@@ -11,8 +11,8 @@ export class StatusReply extends Reply {
     //
   }
 
-  async reply(ctx: MeetonContext): Promise<void> {
-    const { i18n, status, isAdmin, id } = ctx.userModel
+  private getReplyStatusMessage(ctx: MeetonContext): string {
+    const { i18n, status } = ctx.userModel
 
     const favorabilityProgress = drawProgressBar(
       status.nextLevelFavorability,
@@ -24,7 +24,7 @@ export class StatusReply extends Reply {
       status.movement
     )
 
-    let msg = i18n.t('status.template', {
+    const msg = i18n.t('status.template', {
       favorability: status.favorability,
       lv: status.favorabilityLevel,
       favorabilityProcess: favorabilityProgress,
@@ -33,6 +33,25 @@ export class StatusReply extends Reply {
       movementMax: status.maxMovement,
       movementProcess: movementProgress,
     })
+    return msg
+  }
+
+  private getReplyNotAtHomeMessage(ctx: MeetonContext): string {
+    const { i18n } = ctx.userModel
+    const msg = i18n.t('status.notAtHome')
+    return msg
+  }
+
+  async reply(ctx: MeetonContext): Promise<void> {
+    const { location, isAdmin, status, i18n, id } = ctx.userModel
+
+    let msg = ''
+
+    if (location.isAtHome) {
+      msg = this.getReplyStatusMessage(ctx)
+    } else {
+      msg = this.getReplyNotAtHomeMessage(ctx)
+    }
 
     if (isAdmin) {
       const adminMsgs = ['---------', '[ADMIN]']
@@ -47,6 +66,7 @@ export class StatusReply extends Reply {
           status.lastTravelEndAt ? status.lastTravelEndAt.toISOString() : 'null'
         }`
       )
+      adminMsgs.push(`<b>talkPoints</b>: ${status.talkPoints}`)
       const tasks = await UserInnerTask.findAll({
         where: {
           state: TaskState.wait,
