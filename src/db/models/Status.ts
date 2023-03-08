@@ -127,8 +127,14 @@ export default class Status extends Model {
     await this.reload()
     if (this.talkPoints === 0) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const user = (await User.findByPk(this.userId))!
-      await user.addRecoverTalkPointsTask()
+      const user = (await User.findOrCreateUser(this.userId))!
+      if (this.movementLevel > 0) {
+        await user.addStartTravelTask()
+      } else {
+        this.setDataValue('travelInWaiting', true)
+        await this.save()
+        await user.addRecoverTalkPointsTask()
+      }
     }
   }
 
