@@ -7,7 +7,7 @@ yarn
 ```
 
 ### ENV
-```
+```yaml
 # if DEBUG=1, will show all debug logs
 DEBUG=1
 BOT_TOKEN=
