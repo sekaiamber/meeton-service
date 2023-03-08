@@ -1,11 +1,10 @@
 import { Telegraf } from 'telegraf'
+import CONSTANTS from '../../constants'
 import { MeetonContext } from '../types'
 import replyMenu from '../utils/replyMenu'
 import Reply from './base'
 
-const TIMESCALE = process.env.DEV_TIMESCALE
-  ? parseFloat(process.env.DEV_TIMESCALE)
-  : 1
+const { timeScale } = CONSTANTS
 
 export class AdminReply extends Reply {
   register(bot: Telegraf): void {
@@ -16,8 +15,8 @@ export class AdminReply extends Reply {
     const { i18n, id } = ctx.userModel
     const msg = i18n.t('admin.template', {
       userId: id,
-      timeScale: TIMESCALE,
-      speedUp: Math.floor(1 / TIMESCALE),
+      timeScale,
+      speedUp: Math.floor(1 / timeScale),
     })
     await replyMenu(ctx, msg, [
       [

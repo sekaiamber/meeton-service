@@ -13,8 +13,11 @@ import {
   Model,
   Default,
 } from 'sequelize-typescript'
-import { timeScale } from '../../utils/time'
+import CONSTANTS from '../../constants'
+import { scaleTime } from '../../utils/time'
 import User from './User'
+
+const { timeScale } = CONSTANTS
 
 export enum TaskType {
   test = 0,
@@ -43,10 +46,6 @@ export enum TaskState {
   canceled = 'canceled',
   error = 'error',
 }
-
-const TIMESCALE = process.env.DEV_TIMESCALE
-  ? parseFloat(process.env.DEV_TIMESCALE)
-  : 1
 
 @Table({
   modelName: 'userInnerTask',
@@ -120,7 +119,7 @@ export default class UserInnerTask extends Model {
     runAt: Date,
     from?: Date
   ): Promise<UserInnerTask> {
-    const realRunAt = timeScale(runAt, TIMESCALE, from)
+    const realRunAt = scaleTime(runAt, timeScale, from)
     return await UserInnerTask.create({
       userId,
       type,

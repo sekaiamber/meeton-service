@@ -19,7 +19,7 @@ import CONSTANTS from '../../constants'
 import { Transaction } from 'sequelize'
 import { timeNumber } from '../../utils/time'
 
-const { favorabilityLevelMap, movementLevelMap } = CONSTANTS
+const { favorabilityLevelMap, movementLevelMap, timeScale } = CONSTANTS
 
 @Table({
   modelName: 'status',
@@ -104,7 +104,7 @@ export default class Status extends Model {
     if (this.lastTravelEndAt === null) return false
     const now = new Date()
     const diff = now.getTime() - this.lastTravelEndAt.getTime()
-    return diff < timeNumber.hour
+    return diff < timeNumber.hour * timeScale
   }
 
   // talk points

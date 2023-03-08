@@ -34,6 +34,10 @@ const targetLevelTimeCostMap = [
   timeNumber.hour * 36,
 ]
 
+const timeScale = process.env.DEV_TIMESCALE
+  ? parseFloat(process.env.DEV_TIMESCALE)
+  : 1
+
 const CONSTANTS = {
   favorabilityLevelMap,
   movementLevelMap,
@@ -44,6 +48,7 @@ const CONSTANTS = {
   favorabilityTreasureRarityWeightMap,
   targetLevelMovementCostMap,
   targetLevelTimeCostMap,
+  timeScale,
 }
 
 export default CONSTANTS

@@ -22,7 +22,7 @@ export function getNextRandomDatetime(start: Date, max: number, min = 0): Date {
   return addTime(start, add)
 }
 
-export function timeScale(
+export function scaleTime(
   target: Date,
   scale: number,
   from = new Date()
