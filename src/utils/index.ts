@@ -30,6 +30,10 @@ export function randomGt(gt = 0.5): boolean {
   return Math.random() > gt
 }
 
+export function randomPickInt(max: number, min = 0): number {
+  return Math.floor(Math.random() * (max - min) + min)
+}
+
 export function randomPick<T>(source: T[]): T {
   return source[Math.floor(Math.random() * source.length)]
 }

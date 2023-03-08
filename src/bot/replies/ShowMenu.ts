@@ -7,6 +7,7 @@ import tokenReply from './Token'
 import statusReply from './Status'
 import testReply from './Test'
 import adminReply from './Admin'
+import chatReply from './Chat'
 
 interface ShowMenuCallbackData {
   userId: number
@@ -64,9 +65,8 @@ export class ShowMenuReply extends Reply {
       const mctx = ctx as unknown as MeetonContext
       switch (data.key) {
         case 'chat': {
-          // TODO:
           await ctx.deleteMessage()
-          await comingReply.reply(mctx)
+          await chatReply.reply(mctx)
           break
         }
         case 'status': {

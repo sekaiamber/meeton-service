@@ -120,6 +120,18 @@ export default class Status extends Model {
     await this.save()
   }
 
+  async onTalk(favorabilityChangeBy: number): Promise<void> {
+    // TODO: transction
+    await this.increment('talkPoints', { by: -1 })
+    await this.addFavorability(favorabilityChangeBy)
+    await this.reload()
+    if (this.talkPoints === 0) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const user = (await User.findByPk(this.userId))!
+      await user.addRecoverTalkPointsTask()
+    }
+  }
+
   // travel cooldown
   @AllowNull(true)
   @Column(DataType.DATE)
@@ -157,6 +169,18 @@ export default class Status extends Model {
       await user.addStartTravelTask()
       this.setDataValue('travelInWaiting', false)
       await this.save()
+    }
+  }
+
+  async addFavorability(by: number, t?: Transaction): Promise<void> {
+    await this.increment('additionalFavorability', { by, transaction: t })
+    await this.reload({ transaction: t })
+    if (this.maxFavorability < this.favorability) {
+      await this.setDataValue(
+        'additionalFavorability',
+        this.maxFavorability - this.initFavorability
+      )
+      await this.save({ transaction: t })
     }
   }
 

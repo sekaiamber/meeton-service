@@ -68,9 +68,16 @@ const ret = {
     status: {
       template: statusTemplate,
       notAtHome: '<i>[MeeTon is not at home...]</i>\n',
+      sleeping: '<i>[Zzzzz...]</i>\n',
+      noTalkPoints: "<i>[MeeTon doesn't seem to want to talk to you]</i>\n",
     },
     admin: {
       template: adminTemplate,
+    },
+    chat: {
+      questions: arr2obj(
+        favorabilityQuestions.map((q) => getI18nOptionQuestionData(q))
+      ),
     },
   },
 }
