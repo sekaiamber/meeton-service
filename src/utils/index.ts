@@ -17,7 +17,7 @@ export function drawProgressBar(
   slider = '=',
   arrow = '>'
 ): string {
-  const d = filledBar(total, current, size, line, slider)[0]
+  const d = filledBar(total, Math.max(current, 0), size, line, slider)[0]
   if (d.startsWith(line)) return d
   if (d.endsWith(slider)) return d
   const i = d.indexOf(line)
