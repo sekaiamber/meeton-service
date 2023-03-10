@@ -11,8 +11,6 @@ yarn
 # if DEBUG=1, will show all debug logs
 DEBUG=1
 BOT_TOKEN=
-# password for generating TON wallet
-WALLET_PASSWORD=
 # Database informations
 DB_HOST=127.0.0.1
 DB_NAME=meeton
@@ -22,6 +20,10 @@ DB_PASS=
 # DEV_TIMESCALE=0.0006944444444444445
 # makes 1 day become 1 min.
 DEV_TIMESCALE=
+# TON CENTER API key for Tonweb
+TONCENTER_API_KEY=
+# MEE token contract address
+MEE_CONTRACT_ADDRESS=
 ```
 
 ### Service
