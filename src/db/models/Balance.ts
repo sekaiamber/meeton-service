@@ -64,7 +64,7 @@ export default class Balance extends Model {
   }
 
   get humanBalance(): string {
-    return tokenHumanAmount(this.amount.toString())
+    return tokenHumanAmount(this.amount.toString(), 9, 2)
   }
 
   @ForeignKey(() => Wallet)

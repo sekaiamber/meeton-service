@@ -5,6 +5,8 @@ const tokenTemplate = `<b>Your TON address is:</b>
 
 <code>{{address}}</code>
 
+<b>Your MEE balance:</b> {{meeBalance}}
+
 `
 
 const statusTemplate = `<b>💓 Favorability: {{favorability}}(lv.{{lv}})</b>

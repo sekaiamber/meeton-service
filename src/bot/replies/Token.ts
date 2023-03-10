@@ -1,4 +1,5 @@
 import { Telegraf } from 'telegraf'
+import { BalanceAssets } from '../../db/models/Balance'
 import { MeetonContext } from '../types'
 import replyMenu from '../utils/replyMenu'
 import Reply from './base'
@@ -10,7 +11,12 @@ export class TokenReply extends Reply {
 
   async reply(ctx: MeetonContext): Promise<void> {
     const { i18n, wallet } = ctx.userModel
-    const msg = i18n.t('token.template', { address: wallet.address })
+    await wallet.updateAllBalances()
+    const meeBalance = await wallet.getBalance(BalanceAssets.mee)
+    const msg = i18n.t('token.template', {
+      address: wallet.address,
+      meeBalance: meeBalance.humanBalance,
+    })
     await replyMenu(ctx, msg, [
       [
         {
