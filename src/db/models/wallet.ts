@@ -14,12 +14,10 @@ import {
   Default,
 } from 'sequelize-typescript'
 import { KeyPair, mnemonicNew, mnemonicToWalletKey } from 'ton-crypto'
-import { WalletContractV4 } from 'ton'
+import { WalletContractV3R2 } from 'ton'
 import User from './User'
 
 // EQCjrNjgzRowoSpiQO7b7qzVK9PIXNGDep6Z6ALo5mMF1ibf
-
-const { WALLET_PASSWORD } = process.env
 
 @Table({
   modelName: 'wallet',
@@ -77,12 +75,11 @@ export default class Wallet extends Model {
   }
 
   static async generateWallet(userId?: number): Promise<Wallet> {
-    const password = WALLET_PASSWORD ?? null
-    const mnemonics: string[] = await mnemonicNew(24, password)
+    const mnemonics: string[] = await mnemonicNew(24)
 
-    const key: KeyPair = await mnemonicToWalletKey(mnemonics, password)
+    const key: KeyPair = await mnemonicToWalletKey(mnemonics)
 
-    const wallet = WalletContractV4.create({
+    const wallet = WalletContractV3R2.create({
       publicKey: key.publicKey,
       workchain: 0,
     })
