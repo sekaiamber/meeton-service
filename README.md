@@ -77,3 +77,7 @@ So you also can startup a task to check if the unused wallet address is enough.
 ## Can't get 'chat_member'?
 
 [view this issue](https://github.com/yagop/node-telegram-bot-api/issues/923)
+
+## TON CENTER API KEY?
+
+Register your API key in the @tonapibot to get access with higher limits.
