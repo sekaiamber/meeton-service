@@ -14,6 +14,8 @@ const {
   Travel,
   TravelTarget,
   TravelTreasure,
+  Balance,
+  Deposit,
 } = Models
 
 const sequelize = new Sequelize({
@@ -40,6 +42,8 @@ const sequelize = new Sequelize({
     TravelTarget,
     TravelTreasure,
     Travel,
+    Balance,
+    Deposit,
   ],
 })
 
