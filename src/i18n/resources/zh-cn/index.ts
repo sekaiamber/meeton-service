@@ -41,7 +41,7 @@ const ret = {
           .slice(0, 10)
           .map((q) => getI18nOptionQuestionData(q))
       ),
-      success: 'Great! You have finish the test. [TBE]',
+      success: 'Great!',
     },
     menu: {
       title: '🛸',
