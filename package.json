@@ -15,7 +15,8 @@
     "upload_server": "http-server ./upload",
     "script": "npm run babel && node -r dotenv/config ",
     "pm2_start": "pm2 start --name meeton_service npm -- run start",
-    "pm2_start_task": "pm2 start --name meeton_service_task npm -- run start_task"
+    "pm2_start_task": "pm2 start --name meeton_service_task npm -- run start_task",
+    "pm2_start_monitor": "pm2 start --name meeton_service_monitor npm -- run start_monitor"
   },
   "dependencies": {
     "axios": "^0.24.0",
