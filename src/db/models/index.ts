@@ -7,6 +7,7 @@ import UserInnerTask from './UserInnerTask'
 import Location from './Location'
 import Travel, { TravelTarget, TravelTreasure } from './Travel'
 import Balance, { Deposit } from './Balance'
+import { MarketItem, UserMarketItem } from './Market'
 
 export {
   Constant,
@@ -21,4 +22,6 @@ export {
   TravelTreasure,
   Balance,
   Deposit,
+  MarketItem,
+  UserMarketItem,
 }

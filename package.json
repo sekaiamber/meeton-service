@@ -11,7 +11,7 @@
     "start": "npm run babel && node -r dotenv/config lib/start.js",
     "start_task": "npm run babel && node -r dotenv/config lib/startTaskRunner.js",
     "start_monitor": "npm run babel && node -r dotenv/config lib/startBlockMonitor.js",
-    "test": "npm run babel && node -r dotenv/config lib/test/meeBlockMonitor.js",
+    "test": "npm run babel && node -r dotenv/config lib/test/image.js",
     "upload_server": "http-server ./upload",
     "script": "npm run babel && node -r dotenv/config ",
     "pm2_start": "pm2 start --name meeton_service npm -- run start",
@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "axios": "^0.24.0",
+    "canvas": "^2.11.0",
     "decimal.js": "^10.3.1",
     "decimal.js-light": "^2.5.1",
     "dotenv": "^10.0.0",

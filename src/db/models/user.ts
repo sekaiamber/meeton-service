@@ -160,11 +160,16 @@ export default class User extends Model {
       needUpdate = true
     }
     if (needUpdate) {
-      await user.reload({
-        include: User.includeTables,
-      })
+      await user.reloadAllModels()
     }
     return user
+  }
+
+  async reloadAllModels(transaction?: Transaction): Promise<void> {
+    await this.reload({
+      include: User.includeTables,
+      transaction,
+    })
   }
 
   get i18n(): i18nInterface {

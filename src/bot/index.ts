@@ -11,6 +11,7 @@ import tokenReply from './replies/Token'
 import statusReply from './replies/Status'
 import adminReply from './replies/Admin'
 import chatReply from './replies/Chat'
+import marketReply from './replies/Market'
 
 const { DEBUG } = process.env
 
@@ -52,6 +53,7 @@ export default class Bot {
     statusReply.register(this.bot)
     adminReply.register(this.bot)
     chatReply.register(this.bot)
+    marketReply.register(this.bot)
   }
 
   async start(): Promise<void> {

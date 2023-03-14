@@ -99,8 +99,15 @@ export default class Balance extends Model {
         transaction,
       }
     )
-    await this.increment('amount', { by: payload.amount, transaction })
+    await this.incrementAmount(payload.amount, transaction)
     return deposit
+  }
+
+  async incrementAmount(
+    amount: string,
+    transaction?: Transaction
+  ): Promise<void> {
+    await this.increment('amount', { by: amount, transaction })
   }
 }
 

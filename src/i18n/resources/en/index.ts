@@ -81,6 +81,13 @@ const ret = {
         favorabilityQuestions.map((q) => getI18nOptionQuestionData(q))
       ),
     },
+    market: {
+      buy: 'Purchase (-{{cost}} {{asset}})',
+      my: 'My Items',
+      myEmpty: '<i>[You have no items]</i>\n',
+      use: '<i>[Click items for using]</i>\n',
+      backToMarket: 'Back to market',
+    },
   },
 }
 

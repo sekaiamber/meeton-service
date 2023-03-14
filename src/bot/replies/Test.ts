@@ -11,17 +11,11 @@ export class TestReply extends Reply {
   }
 
   async reply(ctx: MeetonContext): Promise<void> {
-    const wallet = ctx.userModel.wallet
-    const deposit = await wallet.createDeposit({
-      asset: BalanceAssets.mee,
-      amount: '1234000000000',
-      from: 'from',
-      to: 'to',
-      hash: 'hash',
-      logicalTime: 'lt',
-      blockNumber: 10,
+    await ctx.replyWithPhoto({
+      url: 'http://localhost:8000/test.png',
+      // url: 'https://picsum.photos/200/300/?random',
+      // url: 'https://assets.zjzsxhy.com/upload/42a0d69b-c90b-4c8a-974c-7367492ea8d7.svg',
     })
-    await ctx.reply('done')
   }
 }
 
