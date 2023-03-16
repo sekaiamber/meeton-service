@@ -7,6 +7,10 @@ import {
   CanvasRenderingContext2D,
 } from 'canvas'
 import fs from 'fs'
+import tinify from 'tinify'
+
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+tinify.key = process.env.TINYPNG_API_KEY!
 
 interface DrawFrameOption {
   url: string
@@ -137,8 +141,10 @@ async function drawPage(index: number, items: MarketItem[]): Promise<void> {
 
   // Write the image to file
   const buffer = canvas.toBuffer('image/png')
+  const tinyBuffer = await tinify.fromBuffer(buffer).toBuffer()
   const fileName = `${index}.png`
-  fs.writeFileSync(`./public/market/en/${fileName}`, buffer)
+  const path = `./public/market/en/${fileName}`
+  fs.writeFileSync(path, tinyBuffer)
 }
 
 async function task(): Promise<void> {

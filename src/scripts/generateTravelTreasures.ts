@@ -8,6 +8,10 @@ import {
 } from 'canvas'
 import fs from 'fs'
 import i18n from '../i18n'
+import tinify from 'tinify'
+
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+tinify.key = process.env.TINYPNG_API_KEY!
 
 const { en } = i18n
 
@@ -140,8 +144,10 @@ async function drawPage(index: number, items: TravelTreasure[]): Promise<void> {
 
   // Write the image to file
   const buffer = canvas.toBuffer('image/png')
+  const tinyBuffer = await tinify.fromBuffer(buffer).toBuffer()
   const fileName = `${index}.png`
-  fs.writeFileSync(`./public/treasure/en/${fileName}`, buffer)
+  const path = `./public/treasure/en/${fileName}`
+  fs.writeFileSync(path, tinyBuffer)
 }
 
 async function task(): Promise<void> {
