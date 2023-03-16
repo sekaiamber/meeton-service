@@ -96,7 +96,7 @@ async function drawFrame(option?: DrawFrameOption): Promise<Canvas> {
     }
 
     // draw text
-    context.font = "bold 20pt 'PT Sans'"
+    context.font = "bold 18pt 'PT Sans'"
     context.textAlign = 'center'
     context.fillStyle = '#333'
     context.textBaseline = 'middle'
