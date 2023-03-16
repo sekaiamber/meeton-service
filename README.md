@@ -24,6 +24,9 @@ DEV_TIMESCALE=
 TONCENTER_API_KEY=
 # MEE token contract address
 MEE_CONTRACT_ADDRESS=
+# base urls for reply photos
+MARKET_ITEM_BASE_URL=
+TRAVEL_TREASURES_BASE_URL=
 ```
 
 ### Service
