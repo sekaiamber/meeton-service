@@ -1,5 +1,6 @@
 import { arr2obj, getI18nOptionQuestionData } from '../../utils'
 import favorabilityQuestions from './favorabilityQuestions'
+import treasures from './treasures'
 
 const tokenTemplate = `<b>Your TON address is:</b>
 
@@ -20,6 +21,14 @@ Next Level: {{favorabilityNext}}
 
 const adminTemplate = `<b>user id</b>: {{userId}}
 <b>time scale</b>: {{timeScale}}({{speedUp}} times speed up)
+`
+
+const atlasTemplate = `<b>{{name}}</b>
+{{description}}
+
+<pre>Level    {{level}}</pre>
+<pre>Rarity   {{rarity}}</pre>
+<pre>You own  {{have}}</pre>
 `
 
 const ret = {
@@ -87,6 +96,10 @@ const ret = {
       myEmpty: '<i>[You have no items]</i>\n',
       use: '<i>[Click items for using]</i>\n',
       backToMarket: 'Back to market',
+    },
+    treasures: treasures as any,
+    atlas: {
+      template: atlasTemplate,
     },
   },
 }

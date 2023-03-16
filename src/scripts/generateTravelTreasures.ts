@@ -1,5 +1,5 @@
 import sequelize from '../db'
-import { MarketItem } from '../db/models'
+import { TravelTreasure } from '../db/models'
 import {
   createCanvas,
   Canvas,
@@ -7,6 +7,9 @@ import {
   CanvasRenderingContext2D,
 } from 'canvas'
 import fs from 'fs'
+import i18n from '../i18n'
+
+const { en } = i18n
 
 interface DrawFrameOption {
   url: string
@@ -112,7 +115,7 @@ async function drawFrame9(
   }
 }
 
-async function drawPage(index: number, items: MarketItem[]): Promise<void> {
+async function drawPage(index: number, items: TravelTreasure[]): Promise<void> {
   console.log(index)
   // Dimensions for the image
   const width = 900
@@ -131,19 +134,27 @@ async function drawPage(index: number, items: MarketItem[]): Promise<void> {
     context,
     items.map((item) => ({
       url: item.iconUrl,
-      name: item.key,
+      name: en.t(`treasures.${item.key}.name`),
     }))
   )
 
   // Write the image to file
   const buffer = canvas.toBuffer('image/png')
   const fileName = `${index}.png`
-  fs.writeFileSync(`./public/market/en/${fileName}`, buffer)
+  fs.writeFileSync(`./public/treasure/en/${fileName}`, buffer)
 }
 
 async function task(): Promise<void> {
   await sequelize.sync()
-  const items = await MarketItem.findAll()
+  const items = await TravelTreasure.findAll()
+  // for (let i = 0; i < items.length; i++) {
+  //   const item = items[i]
+  //   item.setDataValue(
+  //     'iconUrl',
+  //     `https://assets.zjzsxhy.com/mee/tr/${item.iconUrl}`
+  //   )
+  //   await item.save()
+  // }
   const pageCount = Math.ceil(items.length / 9)
   for (let i = 0; i < pageCount; i++) {
     const pageItems = items.slice(i * 9, i * 9 + 9)

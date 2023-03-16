@@ -12,6 +12,7 @@ import statusReply from './replies/Status'
 import adminReply from './replies/Admin'
 import chatReply from './replies/Chat'
 import marketReply from './replies/Market'
+import atlasReply from './replies/Atlas'
 
 const { DEBUG } = process.env
 
@@ -54,6 +55,7 @@ export default class Bot {
     adminReply.register(this.bot)
     chatReply.register(this.bot)
     marketReply.register(this.bot)
+    atlasReply.register(this.bot)
   }
 
   async start(): Promise<void> {

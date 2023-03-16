@@ -202,6 +202,19 @@ export class TravelTreasure extends Model {
     return this.getDataValue('key')
   }
 
+  @AllowNull(true)
+  @Column(DataType.TEXT)
+  get iconUrl(): string {
+    return this.getDataValue('iconUrl')
+  }
+
+  @AllowNull(false)
+  @Default(1)
+  @Column(DataType.INTEGER)
+  get order(): number {
+    return this.getDataValue('order')
+  }
+
   get description(): string {
     return treasuresRawDataMap[this.key]?.description ?? ''
   }

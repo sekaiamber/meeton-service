@@ -9,6 +9,7 @@ import testReply from './Test'
 import adminReply from './Admin'
 import chatReply from './Chat'
 import marketReply from './Market'
+import atlasReply from './Atlas'
 
 interface ShowMenuCallbackData {
   userId: number
@@ -76,9 +77,8 @@ export class ShowMenuReply extends Reply {
           break
         }
         case 'atlas': {
-          // TODO:
           await ctx.deleteMessage()
-          await comingReply.reply(mctx)
+          await atlasReply.reply(mctx)
           break
         }
         case 'token': {
