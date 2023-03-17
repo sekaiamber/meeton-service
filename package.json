@@ -17,7 +17,7 @@
     "pm2_start": "pm2 start --name meeton_service npm -- run start",
     "pm2_start_task": "pm2 start --name meeton_service_task npm -- run start_task",
     "pm2_start_monitor": "pm2 start --name meeton_service_monitor npm -- run start_monitor",
-    "pm2_start_static_server": "cd ./public && python3 -m http.server"
+    "pm2_start_static_server": "pm2 start --name meeton_service_static python3 -m http.server --directory ./public"
   },
   "dependencies": {
     "axios": "^0.24.0",
